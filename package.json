@@ -1,0 +1,26 @@
+{
+  "name": "ptit-web-exam-be",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linhtran6065/PTIT-Web-Exam-BE.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/linhtran6065/PTIT-Web-Exam-BE/issues"
+  },
+  "homepage": "https://github.com/linhtran6065/PTIT-Web-Exam-BE#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mysql2": "^3.9.3",
+    "sequelize": "^6.37.1"
+  }
+}
