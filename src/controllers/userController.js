@@ -119,9 +119,9 @@ self.get = async (req, res) => {
   try {
     let id = req.params.id;
     const user = await models.user.findOne({ where: { id: id } });
-    res.status(200).send(user);
+    res.status(200).json({ user });
   } catch (error) {
-    res.status(500).send("Error getting user");
+    res.status(500).json({ message: "Error getting user" });
   }
 };
 
@@ -181,7 +181,7 @@ self.delete = async (req, res) => {
 
 self.deleteAll = async (req, res) => {
   try {
-    let data = await user.destroy({
+    let data = await models.user.destroy({
       where: {},
       truncate: true,
     });

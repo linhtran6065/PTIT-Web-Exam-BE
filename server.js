@@ -18,10 +18,18 @@ connectDB();
 //router
 const userRouter = require("./src/routes/userRouter");
 const authRouter = require("./src/routes/authRouter");
+const examRouter = require("./src/routes/examRouter");
+const questionRouter = require("./src/routes/questionRouter");
+const answerRouter = require("./src/routes/answerRouter");
+const studentRouter = require("./src/routes/studentRouter");
 
 const middlewareController = require("./src/controllers/middlewareController");
 
 app.use("/api/users", middlewareController.verifyToken, userRouter);
+app.use("/api/exams", middlewareController.verifyToken, examRouter);
+app.use("/api/questions", middlewareController.verifyToken, questionRouter);
+app.use("/api/answers", middlewareController.verifyToken, answerRouter);
+app.use("/api/students", middlewareController.verifyToken, studentRouter);
 app.use("/api", authRouter);
 //middleware
 app.use(cors(corOptions));
