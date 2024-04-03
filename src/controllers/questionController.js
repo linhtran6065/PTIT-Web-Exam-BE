@@ -19,7 +19,7 @@ self.createQuestion = async (req, res) => {
 
   const question = await models.question.create(data);
 
-  res.status(200).send(question);
+  return res.status(200).send(question);
 };
 
 self.get = async (req, res) => {

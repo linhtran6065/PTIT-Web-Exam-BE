@@ -18,9 +18,14 @@ self.getAll = async (req, res) => {
 };
 
 self.createExam = async (req, res) => {
+  const id = req.body.userId;
+
+  const user = await models.user.findOne({ where: { id: id } });
+
   let info = {
     id: req.body.id,
     name: req.body.name,
+    userId: user.id,
     type: req.body.type,
     date: req.body.date,
     description: req.body.description,

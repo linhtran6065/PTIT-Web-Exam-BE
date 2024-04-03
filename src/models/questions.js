@@ -26,7 +26,9 @@ module.exports = (sequelize, DataTypes) => {
     // }
   );
   Question.associate = (models) => {
-    Question.belongsTo(models.exam);
+    Question.belongsTo(models.exam, {
+      onDelete: "CASCADE",
+    });
     Question.hasMany(models.answer);
   };
 

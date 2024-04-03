@@ -15,6 +15,13 @@ module.exports = {
       },
       questionId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        onDelete: "CASCADE",
+        references: {
+          model: "questions",
+          key: "id",
+          as: "questionId",
+        },
       },
       isCorrect: {
         type: Sequelize.BOOLEAN,

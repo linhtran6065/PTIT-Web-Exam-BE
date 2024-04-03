@@ -11,6 +11,13 @@ module.exports = {
       },
       examId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        onDelete: "CASCADE",
+        references: {
+          model: "exams",
+          key: "id",
+          as: "examId",
+        },
       },
       name: {
         type: Sequelize.STRING,
