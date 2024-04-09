@@ -1,4 +1,5 @@
 let self = {};
+const { where } = require("sequelize");
 const models = require("../models");
 
 self.getAll = async (req, res) => {
@@ -37,18 +38,31 @@ self.createExam = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  let id = req.params.id;
-  let exam = await models.exam.findOne({
-    include: [
-      {
-        model: Question,
-        as: "questions",
-      },
-    ],
+  let examId = req.params.id;
 
-    where: { id: id },
+  let exam = await models.exam.findOne({
+    where: { id: examId },
   });
-  res.status(200).send(exam);
+  if (exam != null) {
+    const listDatas = [];
+    let questions = await models.question.findAll({
+      where: { examId: examId },
+    });
+    try {
+      for (let q = 0; q < questions.length; q++) {
+        let choices = await models.answer.findAll({
+          where: { questionId: questions[q].id },
+        });
+        listDatas.push({ questions: questions[q], choices: choices });
+      }
+      return res
+        .status(200)
+        .json({ count: listDatas.length, exam: exam, data: listDatas });
+    } catch (error) {
+      console.error("Error occurred while getting exam:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
 };
 
 self.updateExam = async (req, res) => {

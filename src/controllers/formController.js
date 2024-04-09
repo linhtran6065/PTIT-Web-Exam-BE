@@ -1,4 +1,5 @@
 let self = {};
+const { where } = require("sequelize");
 const models = require("../models");
 self.getAll = async (req, res) => {
   try {
@@ -63,6 +64,11 @@ self.createForm = async (req, res) => {
     }
     if (!existStudent) {
       return res.json({ message: "Student is not exist!" });
+    }
+
+    const existForm = await models.form.findOne({ where: examId, studentMsv });
+    if (existForm) {
+      return res.json({ message: "Form has already been created!" });
     }
 
     //calc score

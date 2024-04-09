@@ -29,35 +29,44 @@ const register = async (req, res) => {
 };
 
 //login
-const login = async (req, res) => {
-  let accessToken;
-  let refreshToken;
+const loginUser = async (req, res) => {
   try {
-    if (req.body.password != null) {
-      const { email, password } = req.body;
-      const user = await models.user.findOne({ where: { email } });
-      if (!user) {
-        return res
-          .status(400)
-          .json({ message: "Email or Password does not match!" });
-      }
-      const isPasswordMatch = await bcrypt.compare(password, user.password);
-      if (!isPasswordMatch) {
-        return res
-          .status(400)
-          .json({ message: "Email or Password does not match!" });
-      }
-      accessToken = generalAccessToken(user);
-      refreshToken = generalRefreshToken(user);
-    } else {
-      const { email, msv } = req.body;
-      const student = await models.student.findOne({ where: { msv } });
-      if (!student || student.email != email) {
-        return res.status(400).json({ message: "Account does not match!" });
-      }
-      accessToken = generalAccessToken(student);
-      refreshToken = generalRefreshToken(student);
+    const { email, password } = req.body;
+    const user = await models.user.findOne({ where: { email } });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "Email or Password does not match!" });
     }
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
+      return res
+        .status(400)
+        .json({ message: "Email or Password does not match!" });
+    }
+    const accessToken = generalAccessToken(user);
+    const refreshToken = generalRefreshToken(user);
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "strict",
+      overwrite: true,
+    });
+    res.json({ accessToken, refreshToken });
+  } catch {
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+const loginStudent = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const student = await models.student.findOne({ where: { msv: password } });
+    if (!student || student.email != email) {
+      return res.status(400).json({ message: "Account does not match!" });
+    }
+    const accessToken = generalAccessToken(student);
+    const refreshToken = generalRefreshToken(student);
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -125,4 +134,4 @@ const logOut = async (req, res) => {
   return res.status(200).json({ message: "Logged out successfully!" });
 };
 
-module.exports = { register, login, refreshToken, logOut };
+module.exports = { register, loginUser, loginStudent, refreshToken, logOut };
