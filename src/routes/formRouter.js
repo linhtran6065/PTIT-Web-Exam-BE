@@ -1,36 +1,38 @@
-const userController = require("../controllers/userController");
+const formController = require("../controllers/formController");
 const middlewareController = require("../controllers/middlewareController");
+
 const router = require("express").Router();
 
 router.get(
   "/",
   middlewareController.verifyTokenAndAdminAuth,
-  userController.getAll
+  formController.getAll
 );
+router.post("/", formController.createForm);
 router.get(
   "/:id",
   middlewareController.verifyTokenAndAdminAuth,
-  userController.get
+  formController.get
 );
-router.post(
-  "/",
+router.get(
+  "/student/:id",
   middlewareController.verifyTokenAndAdminAuth,
-  userController.createUser
+  formController.getAllByStudent
 );
 router.put(
   "/:id",
   middlewareController.verifyTokenAndAdminAuth,
-  userController.updateUser
+  formController.updateForm
 );
 router.delete(
   "/:id",
   middlewareController.verifyTokenAndAdminAuth,
-  userController.delete
+  formController.delete
 );
 router.delete(
   "/",
   middlewareController.verifyTokenAndAdminAuth,
-  userController.deleteAll
+  formController.deleteAll
 );
 
 module.exports = router;

@@ -30,22 +30,35 @@ const register = async (req, res) => {
 
 //login
 const login = async (req, res) => {
+  let accessToken;
+  let refreshToken;
   try {
-    const { email, password } = req.body;
-    const user = await models.user.findOne({ where: { email } });
-    if (!user) {
-      return res
-        .status(400)
-        .json({ message: "Email or Password does not match!" });
+    if (req.body.password != null) {
+      const { email, password } = req.body;
+      const user = await models.user.findOne({ where: { email } });
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: "Email or Password does not match!" });
+      }
+      const isPasswordMatch = await bcrypt.compare(password, user.password);
+      if (!isPasswordMatch) {
+        return res
+          .status(400)
+          .json({ message: "Email or Password does not match!" });
+      }
+      accessToken = generalAccessToken(user);
+      refreshToken = generalRefreshToken(user);
+    } else {
+      const { email, msv } = req.body;
+      const student = await models.student.findOne({ where: { msv } });
+      if (!student || student.email != email) {
+        return res.status(400).json({ message: "Account does not match!" });
+      }
+      accessToken = generalAccessToken(student);
+      refreshToken = generalRefreshToken(student);
     }
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
-    if (!isPasswordMatch) {
-      return res
-        .status(400)
-        .json({ message: "Email or Password does not match!" });
-    }
-    const accessToken = generalAccessToken(user);
-    const refreshToken = generalRefreshToken(user);
+
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       sameSite: "strict",

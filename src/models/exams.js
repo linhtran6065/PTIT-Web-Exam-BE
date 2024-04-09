@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Exam.associate = (models) => {
     Exam.hasMany(models.question);
+    Exam.hasMany(models.form);
   };
   return Exam;
 };

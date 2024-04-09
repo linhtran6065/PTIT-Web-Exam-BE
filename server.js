@@ -22,6 +22,8 @@ const examRouter = require("./src/routes/examRouter");
 const questionRouter = require("./src/routes/questionRouter");
 const answerRouter = require("./src/routes/answerRouter");
 const studentRouter = require("./src/routes/studentRouter");
+const formRouter = require("./src/routes/formRouter");
+const resultRouter = require("./src/routes/resultRouter");
 
 const middlewareController = require("./src/controllers/middlewareController");
 
@@ -30,6 +32,8 @@ app.use("/api/exams", middlewareController.verifyToken, examRouter);
 app.use("/api/questions", middlewareController.verifyToken, questionRouter);
 app.use("/api/answers", middlewareController.verifyToken, answerRouter);
 app.use("/api/students", middlewareController.verifyToken, studentRouter);
+app.use("/api/forms", middlewareController.verifyToken, formRouter);
+app.use("/api/results", middlewareController.verifyToken, resultRouter);
 app.use("/api", authRouter);
 //middleware
 app.use(cors(corOptions));

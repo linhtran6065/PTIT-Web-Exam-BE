@@ -1,5 +1,3 @@
-"use strict";
-const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   const Student = sequelize.define(
     "student",
@@ -8,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+        primaryKey: true,
       },
       email: {
         type: DataTypes.STRING,
@@ -31,5 +30,8 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
     }
   );
+  Student.associate = (models) => {
+    Student.hasMany(models.form);
+  };
   return Student;
 };

@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true, // This makes the 'id' field auto-increment
+      autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING,
@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Answer.associate = (models) => {
     Answer.belongsTo(models.question);
+    Answer.hasMany(models.result);
   };
   return Answer;
 };

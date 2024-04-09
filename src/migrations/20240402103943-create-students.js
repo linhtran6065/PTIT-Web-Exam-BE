@@ -4,6 +4,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("students", {
       msv: {
+        primaryKey: true,
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,

@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "CASCADE",
     });
     Question.hasMany(models.answer);
+    Question.hasMany(models.result);
   };
 
   return Question;

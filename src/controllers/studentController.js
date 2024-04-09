@@ -4,7 +4,7 @@ const models = require("../models");
 self.getAll = async (req, res) => {
   try {
     let data = await models.student.findAll({});
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       count: data.length,
       data: data,
@@ -19,12 +19,16 @@ self.getAll = async (req, res) => {
 
 self.createStudent = async (req, res) => {
   try {
-    const { email, firstName, lastName, stuClass, msv } = req.body;
+    const { email, firstName, lastName, msv } = req.body;
 
-    const alreadyExistStudent = await models.students.findOne({
-      where: { email },
+    const alreadyExistEmailStudent = await models.student.findOne({
+      where: { email: email },
     });
-    if (alreadyExistStudent) {
+    const alreadyExistMSVStudent = await models.student.findOne({
+      where: { msv: msv },
+    });
+
+    if (alreadyExistEmailStudent || alreadyExistMSVStudent) {
       return res.json({ message: "Student already exists!" });
     }
     let newStudent = {
@@ -32,13 +36,13 @@ self.createStudent = async (req, res) => {
       email: email,
       firstName: firstName,
       lastName: lastName,
-      class: stuClass,
+      class: req.body.class,
     };
     const student = await models.student.create(newStudent);
 
     res
       .status(200)
-      .json({ message: "Adding student successfully", student: newStudent });
+      .json({ message: "Adding student successfully", student: student });
   } catch (error) {
     res.status(500).json({ message: "Error adding student!" });
   }
