@@ -17,10 +17,28 @@ self.getAll = async (req, res) => {
         isFinish: forms[i].isFinish,
       });
     }
-
+    //searchByDate
+    const searchForms = [];
+    if (req.query.search != null) {
+      try {
+        const date = req.query.search;
+        processedForms.forEach((form) => {
+          if (form.date == date) {
+            searchForms.push(form);
+          }
+        });
+        return res.status(200).json({
+          success: true,
+          count: searchForms.length,
+          data: searchForms,
+        });
+      } catch {
+        return res.json({ message: "Error searching" });
+      }
+    }
     res.status(200).json({
       success: true,
-      count: forms.length,
+      count: processedForms.length,
       data: processedForms,
     });
   } catch (error) {
