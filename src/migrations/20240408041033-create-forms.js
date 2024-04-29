@@ -37,10 +37,14 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: true,
       },
-      date: {
+      startTime: {
         allowNull: false,
-        type: Sequelize.DATEONLY,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
+      },
+      endTime: {
+        allowNull: true,
+        type: Sequelize.DATE,
       },
     });
   },

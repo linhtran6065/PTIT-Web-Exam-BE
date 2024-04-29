@@ -52,7 +52,8 @@ self.getAll = async (req, res) => {
 
 self.createForm = async (req, res) => {
   try {
-    const { examId, studentMsv, choiceSelections } = req.body;
+    const { examId, studentMsv, choiceSelections, startTime, endTime } =
+      req.body;
 
     const existExam = await models.exam.findOne({ where: { id: examId } });
     const existStudent = await models.student.findOne({
@@ -66,7 +67,9 @@ self.createForm = async (req, res) => {
       return res.json({ message: "Student is not exist!" });
     }
 
-    const existForm = await models.form.findOne({ where: examId, studentMsv });
+    const existForm = await models.form.findOne({
+      where: { examId, studentMsv },
+    });
     if (existForm) {
       return res.json({ message: "Form has already been created!" });
     }
@@ -104,6 +107,8 @@ self.createForm = async (req, res) => {
       studentMsv: studentMsv,
       score: score,
       isFinish: isFinish,
+      startTime: startTime,
+      endTime: endTime,
     };
     const form = await models.form.create(newForm);
 

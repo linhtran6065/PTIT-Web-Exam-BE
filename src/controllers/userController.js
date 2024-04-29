@@ -99,14 +99,22 @@ self.createUser = async (req, res) => {
       return res.json({ message: "User already exists!" });
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const isAdminUpdated = req.body.isAdmin ? true : false;
     let newUser = {
       email: email,
       password: hashedPassword,
       firstName: firstName,
       lastName: lastName,
+      isAdmin: isAdminUpdated,
     };
     const user = await models.user.create(newUser);
-    const userData = { id: user.id, email, firstName, lastName };
+    const userData = {
+      id: user.id,
+      email,
+      firstName,
+      lastName,
+      isAdmin: isAdminUpdated,
+    };
     res
       .status(200)
       .json({ message: "Adding user successfully", user: userData });
@@ -119,7 +127,14 @@ self.get = async (req, res) => {
   try {
     let id = req.params.id;
     const user = await models.user.findOne({ where: { id: id } });
-    res.status(200).json({ user });
+    const userData = {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      isAdmin: user.isAdmin,
+    };
+    res.status(200).json({ user: userData });
   } catch (error) {
     res.status(500).json({ message: "Error getting user" });
   }

@@ -23,13 +23,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    date: {
+    startTime: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
-    length: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+    endTime: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   });
   Exam.associate = (models) => {

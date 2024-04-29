@@ -25,10 +25,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         allowNull: true,
       },
-      date: {
-        type: DataTypes.DATEONLY,
+      startTime: {
+        type: DataTypes.DATE,
         allowNull: true,
         defaultValue: DataTypes.NOW,
+      },
+      endTime: {
+        type: DataTypes.DATE,
+        allowNull: true,
       },
     },
     {

@@ -51,7 +51,7 @@ self.createStudent = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    const student = await models.student.findOne({ where: { id: id } });
+    const student = await models.student.findOne({ where: { msv: id } });
     res.status(200).json({ student: student });
   } catch (error) {
     res.status(500).json({ message: "Error getting student" });
@@ -62,11 +62,13 @@ self.updateStudent = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await models.student.update(body, {
+    let { msv, ...others } = body;
+    let data = await models.student.update(others, {
       where: {
-        id: id,
+        msv: id,
       },
     });
+
     if (data[0] === 0) {
       return res.status(200).json({
         success: false,
@@ -90,7 +92,7 @@ self.delete = async (req, res) => {
     let id = req.params.id;
     let data = await models.student.destroy({
       where: {
-        id: id,
+        msv: id,
       },
     });
     if (data === 1) {

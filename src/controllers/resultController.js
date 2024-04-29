@@ -30,6 +30,10 @@ self.get = async (req, res) => {
 self.getAllByForm = async (req, res) => {
   try {
     let formId = req.params.id;
+    const existForm = await models.form.findOne({ where: { id: formId } });
+    if (!existForm) {
+      return res.status(404).json({ message: "Form not found" });
+    }
     let results = await models.result.findAll({ where: { formId } });
     if (!results) {
       return res.status(404).json({ message: "Result not found" });

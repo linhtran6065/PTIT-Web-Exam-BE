@@ -19,22 +19,45 @@ self.getAll = async (req, res) => {
 };
 
 self.createExam = async (req, res) => {
-  const id = req.body.userId;
+  try {
+    const { userId, name, type, date, description, length } = req.body;
+    const user = await models.user.findOne({ where: { id: userId } });
 
-  const user = await models.user.findOne({ where: { id: id } });
+    if (!user) {
+      return res.json({ message: "User is not exist!" });
+    }
+    let newExam = {
+      name: name,
+      userId: userId,
+      type: type,
+      length: length,
+      date: date,
+      description: description,
+    };
 
-  let info = {
-    id: req.body.id,
-    name: req.body.name,
-    userId: user.id,
-    type: req.body.type,
-    date: req.body.date,
-    description: req.body.description,
-    length: req.body.length,
-  };
+    const exam = await models.exam.create(newExam);
+    res.status(200).json({ message: "Adding exam successfully", data: exam });
+  } catch (error) {
+    console.error("Error occurred while getting exam:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 
-  const exam = await models.exam.create(info);
-  res.status(200).send(exam);
+  // const id = req.body.userId;
+
+  // const user = await models.user.findOne({ where: { id: id } });
+
+  // let info = {
+  //   id: req.body.id,
+  //   name: req.body.name,
+  //   userId: user.id,
+  //   type: req.body.type,
+  //   date: req.body.date,
+  //   description: req.body.description,
+  //   length: req.body.length,
+  // };
+
+  // const exam = await models.exam.create(info);
+  // res.status(200).send(exam);
 };
 
 self.get = async (req, res) => {
@@ -66,19 +89,56 @@ self.get = async (req, res) => {
 };
 
 self.updateExam = async (req, res) => {
-  let id = req.params.id;
-
-  const exam = await models.exam.update(req.body, { where: { id: id } });
-
-  res.status(200).send(exam);
+  try {
+    let id = req.params.id;
+    let body = req.body;
+    let data = await models.exam.update(body, {
+      where: {
+        id: id,
+      },
+    });
+    if (data[0] === 0) {
+      return res.status(200).json({
+        success: false,
+        error: "No exam is updated",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: `exam with id= ${id} updated`,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error,
+    });
+  }
 };
 
 self.delete = async (req, res) => {
-  let id = req.params.id;
-
-  await models.exam.destroy({ where: { id: id } });
-
-  res.status(200).send("Exam is deleted !");
+  try {
+    let id = req.params.id;
+    let data = await models.exam.destroy({
+      where: {
+        id: id,
+      },
+    });
+    if (data === 1) {
+      return res.status(200).json({
+        success: true,
+        message: `Exam with id=${id} deleted`,
+      });
+    }
+    return res.status(200).json({
+      success: false,
+      message: `Exam with id=${id} is not exist.`,
+    });
+  } catch (error) {
+    return res.status(200).json({
+      success: false,
+      error: error,
+    });
+  }
 };
 
 self.deleteAll = async (req, res) => {};
