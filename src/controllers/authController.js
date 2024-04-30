@@ -103,30 +103,9 @@ const login = async (req, res) => {
   }
 };
 
-// const loginStudent = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     const student = await models.student.findOne({ where: { msv: password } });
-//     if (!student || student.email != email) {
-//       return res.status(400).json({ message: "Account does not match!" });
-//     }
-//     const accessToken = generalAccessToken(student);
-//     const refreshToken = generalRefreshToken(student);
-
-//     res.cookie("refreshToken", refreshToken, {
-//       httpOnly: true,
-//       sameSite: "strict",
-//       overwrite: true,
-//     });
-//     res.json({ accessToken, refreshToken });
-//   } catch {
-//     return res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
-const generalAccessToken = (user) => {
+const generalAccessToken = (entity) => {
   const token = jwt.sign(
-    { id: user.id, isAdmin: user.isAdmin },
+    { id: entity.id || entity.msv, isAdmin: entity.isAdmin || false },
     process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn: "30m",
@@ -134,9 +113,9 @@ const generalAccessToken = (user) => {
   );
   return token;
 };
-const generalRefreshToken = (user) => {
+const generalRefreshToken = (entity) => {
   const token = jwt.sign(
-    { id: user.id, isAdmin: user.isAdmin },
+    { id: entity.id || entity.msv, isAdmin: entity.isAdmin || false },
     process.env.REFRESH_TOKEN_SECRET,
     {
       expiresIn: "100d",
@@ -167,7 +146,7 @@ const refreshToken = async (req, res) => {
       if (user) {
         const newAccessToken = generalAccessToken(user);
 
-        res.json({ accessToken: newAccessToken, isAdmin: user.isAdmin });
+        res.json({ accessToken: newAccessToken });
       }
     }
   );
