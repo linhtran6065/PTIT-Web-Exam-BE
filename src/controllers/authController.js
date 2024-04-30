@@ -167,7 +167,7 @@ const refreshToken = async (req, res) => {
       if (user) {
         const newAccessToken = generalAccessToken(user);
 
-        res.json({ accessToken: newAccessToken });
+        res.json({ accessToken: newAccessToken, isAdmin: user.isAdmin });
       }
     }
   );
@@ -203,7 +203,9 @@ const checkTokenExpired = async (req, res) => {
     const currentTime = Math.floor(Date.now() / 1000);
     var isTokenExpired = decodedToken.exp < currentTime;
 
-    return res.status(200).json({ isTokenExpired: isTokenExpired });
+    return res
+      .status(200)
+      .json({ isTokenExpired: isTokenExpired, decoded: decodedToken });
   });
 };
 
