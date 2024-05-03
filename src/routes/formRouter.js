@@ -9,11 +9,7 @@ router.get(
   formController.getAll
 );
 router.post("/", formController.createForm);
-router.get(
-  "/:id",
-  middlewareController.verifyTokenAndAdminAuth,
-  formController.get
-);
+router.get("/:id", formController.get);
 router.get(
   "/student/:id",
   middlewareController.verifyTokenAndAdminAuth,

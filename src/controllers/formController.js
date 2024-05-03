@@ -13,7 +13,8 @@ self.getAll = async (req, res) => {
       processedForms.push({
         student,
         exam,
-        date: forms[i].date,
+        startTime: forms[i].startTime,
+        endTime: forms[i].startTime,
         score: forms[i].score,
         isFinish: forms[i].isFinish,
       });
@@ -71,7 +72,9 @@ self.createForm = async (req, res) => {
       where: { examId, studentMsv },
     });
     if (existForm) {
-      return res.json({ message: "Form has already been created!" });
+      return res
+        .status(500)
+        .json({ message: "Form has already been created!" });
     }
 
     //calc score
@@ -126,7 +129,7 @@ self.get = async (req, res) => {
   try {
     let id = req.params.id;
     const form = await models.form.findOne({ where: { id: id } });
-    res.status(200).json({ form: form });
+    res.status(200).json(form);
   } catch (error) {
     res.status(500).json({ message: "Error getting form" });
   }
@@ -147,8 +150,10 @@ self.getAllByStudent = async (req, res) => {
       let exam = await models.exam.findOne({ where: { id: forms[i].examId } });
 
       processedForms.push({
+        id: forms[i].id,
         exam,
-        date: forms[i].date,
+        startTime: forms[i].startTime,
+        endTime: forms[i].endTime,
         score: forms[i].score,
         isFinish: forms[i].isFinish,
       });
