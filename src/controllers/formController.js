@@ -27,15 +27,18 @@ self.getAll = async (req, res) => {
       req.query.examName != null
     ) {
       try {
-        const startTime = new Date(req.query.startTime).toLocaleString();
-        const endTime = new Date(req.query.endTime).toLocaleString();
-        const examName = req.query.examName;
+        var startTime = new Date(req.query.startTime).toLocaleString();
+        var endTime = new Date(req.query.endTime).toLocaleString();
+        var examName = req.query.examName;
+        //return res.json({ examName });
         processedForms.forEach((form) => {
           var formStartTime = new Date(form.startTime).toLocaleString();
           var formEndTime = new Date(form.endTime).toLocaleString();
-          const meetsStartTime = !startTime || formStartTime >= startTime;
-          const meetsEndTime = !endTime || formEndTime <= endTime;
-          const meetsExamName = !examName || form.exam.name === examName;
+          var meetsStartTime =
+            !req.query.startTime || formStartTime >= startTime;
+          var meetsEndTime = !req.query.endTime || formEndTime <= endTime;
+          var meetsExamName =
+            !examName || form.exam.name == decodeURIComponent(examName);
 
           if (meetsStartTime && meetsEndTime && meetsExamName) {
             searchForms.push(form);
