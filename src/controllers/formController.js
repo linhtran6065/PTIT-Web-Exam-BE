@@ -21,14 +21,27 @@ self.getAll = async (req, res) => {
     }
     //searchByDate
     const searchForms = [];
-    if (req.query.search != null) {
+    if (
+      req.query.startTime != null ||
+      req.query.endTime != null ||
+      req.query.examName != null
+    ) {
       try {
-        const date = req.query.search;
+        const startTime = new Date(req.query.startTime).toLocaleString();
+        const endTime = new Date(req.query.endTime).toLocaleString();
+        const examName = req.query.examName;
         processedForms.forEach((form) => {
-          if (form.date == date) {
+          var formStartTime = new Date(form.startTime).toLocaleString();
+          var formEndTime = new Date(form.endTime).toLocaleString();
+          const meetsStartTime = !startTime || formStartTime >= startTime;
+          const meetsEndTime = !endTime || formEndTime <= endTime;
+          const meetsExamName = !examName || form.exam.name === examName;
+
+          if (meetsStartTime && meetsEndTime && meetsExamName) {
             searchForms.push(form);
           }
         });
+
         return res.status(200).json({
           success: true,
           count: searchForms.length,

@@ -37,23 +37,76 @@ self.createQuestion = async (req, res) => {
       data: question,
     });
   } catch (error) {
-    console.error("Error occurred while getting exam:", error);
+    console.error("Error occurred while creating question:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
+};
 
-  // const id = req.body.examId;
+self.createListQuestion = async (req, res) => {
+  try {
+    const { examId, data } = req.body;
+    const exam = await models.exam.findOne({ where: { id: examId } });
 
-  // const exam = await models.exam.findOne({ where: { id: id } });
+    if (!exam) {
+      return res.json({ message: "Exam is not exist!" });
+    }
+    const processedQuestions = [];
 
-  // let data = {
-  //   id: req.body.id,
-  //   examId: exam.id,
-  //   name: req.body.name,
-  // };
+    for (var i = 0; i < data.length; i++) {
+      var question;
+      if (data[i].question.id != null) {
+        var updateQuestion = await models.question.update(data[i].question, {
+          where: {
+            id: data[i].question.id,
+          },
+        });
+        question = updateQuestion;
+      } else {
+        var newQuestion = {
+          examId: examId,
+          name: data[i].question.name,
+        };
+        var createdQuestion = await models.question.create(newQuestion);
+        question = createdQuestion;
+      }
+      var choices = [];
+      var answer;
+      for (var j = 0; j < data[i].choices.length; j++) {
+        if (data[i].choices[j].id != null) {
+          var updateAnswer = await models.answer.update(data[i].choices[j], {
+            where: {
+              id: data[i].choices[j].id,
+            },
+          });
+          answer = updateAnswer;
+        } else {
+          var newAnswer = {
+            questionId: createdQuestion.id,
+            isCorrect: data[i].choices[j].isCorrect,
+            name: data[i].choices[j].name,
+          };
+          var createdAnswer = await models.answer.create(newAnswer);
+          answer = createdAnswer;
+        }
 
-  // const question = await models.question.create(data);
+        choices.push(answer);
+      }
+      processedQuestions.push({
+        question: question,
+        choices: choices,
+      });
+    }
 
-  // return res.status(200).send(question);
+    res.status(200).json({
+      message: "Processing successfully",
+      examId: examId,
+      count: data.length,
+      data: processedQuestions,
+    });
+  } catch (error) {
+    console.error("Error occurred while creating list question:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 self.get = async (req, res) => {

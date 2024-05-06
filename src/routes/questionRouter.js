@@ -10,6 +10,11 @@ router.post(
   middlewareController.verifyTokenAndAdminAuth,
   questionController.createQuestion
 );
+router.post(
+  "/listQuestions",
+  middlewareController.verifyTokenAndAdminAuth,
+  questionController.createListQuestion
+);
 router.put(
   "/:id",
   middlewareController.verifyTokenAndAdminAuth,
