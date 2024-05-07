@@ -27,7 +27,7 @@ const middlewareController = require("./src/controllers/middlewareController");
 //middleware
 //app.use(cors(corOptions));
 var corsOptions = {
-  origin: "*",
+  origin: "http://127.0.0.1:5500",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));

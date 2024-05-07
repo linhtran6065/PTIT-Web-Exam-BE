@@ -27,13 +27,13 @@ self.getAll = async (req, res) => {
       req.query.examName != null
     ) {
       try {
-        var startTime = new Date(req.query.startTime).toLocaleString();
-        var endTime = new Date(req.query.endTime).toLocaleString();
+        var startTime = new Date(req.query.startTime);
+        var endTime = new Date(req.query.endTime);
         var examName = req.query.examName;
         //return res.json({ examName });
         processedForms.forEach((form) => {
-          var formStartTime = new Date(form.startTime).toLocaleString();
-          var formEndTime = new Date(form.endTime).toLocaleString();
+          var formStartTime = new Date(form.startTime);
+          var formEndTime = new Date(form.endTime);
           var meetsStartTime =
             !req.query.startTime || formStartTime >= startTime;
           var meetsEndTime = !req.query.endTime || formEndTime <= endTime;
