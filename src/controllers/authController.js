@@ -4,7 +4,7 @@ const jwtDecode = require("jwt-decode");
 require("dotenv").config();
 
 const models = require("../models");
-const { updateUser } = require("./UserController");
+const { updateUser } = require("./userController");
 
 //register
 const registerUser = async (req, res) => {

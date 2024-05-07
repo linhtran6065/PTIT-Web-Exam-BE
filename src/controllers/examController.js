@@ -20,7 +20,7 @@ self.getAll = async (req, res) => {
 
 self.createExam = async (req, res) => {
   try {
-    const { userId, name, type, date, description, length } = req.body;
+    const { userId, name, type, startTime, endTime, description } = req.body;
     const user = await models.user.findOne({ where: { id: userId } });
 
     if (!user) {
@@ -30,8 +30,8 @@ self.createExam = async (req, res) => {
       name: name,
       userId: userId,
       type: type,
-      length: length,
-      date: date,
+      startTime: startTime,
+      endTime: endTime,
       description: description,
     };
 

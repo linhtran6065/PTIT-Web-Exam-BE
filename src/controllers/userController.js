@@ -167,6 +167,45 @@ self.updateUser = async (req, res) => {
     });
   }
 };
+self.resetPassword = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { oldPassword, newPassword } = req.body;
+    const user = await models.user.findOne({ where: { id: id } });
+    if (!user) {
+      return res.json({ message: "User is not exist!" });
+    }
+    const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isPasswordMatch) {
+      return res.status(400).json({ message: "Password does not match!" });
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    let data = await models.user.update(
+      { password: hashedPassword },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
+    if (data[0] === 0) {
+      return res.status(200).json({
+        success: false,
+        error: "No user updated",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: `Password is updated`,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error,
+    });
+  }
+};
 
 self.delete = async (req, res) => {
   try {

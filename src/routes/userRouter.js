@@ -22,6 +22,11 @@ router.put(
   middlewareController.verifyTokenAndAdminAuth,
   userController.updateUser
 );
+router.put(
+  "/resetPassword/:id",
+  middlewareController.verifyTokenAndAdminAuth,
+  userController.resetPassword
+);
 router.delete(
   "/:id",
   middlewareController.verifyTokenAndAdminAuth,
